@@ -1,11 +1,19 @@
 from django.shortcuts import render
-from django.views import View # импортируем простую вьюшку
+#from django.views import View # импортируем простую вьюшку
 from django.core.paginator import Paginator # импортируем класс, позволяющий удобно осуществлять постраничный вывод
 from .models import Product
 from django.views.generic import ListView, DetailView # импортируем класс, который говорит нам о том, что в этом представлении мы будем выводить список объектов из БД
 from datetime import datetime
 
+class ProductsList(ListView):
+    model = Product
+    template_name = 'products.html'
+    context_object_name = 'products'
+    ordering = ['-price']
+    paginate_by = 1 # поставим постраничный вывод в один элемент
+
 # В отличие от дженериков, которые мы уже знаем, код здесь надо писать самому, переопределяя типы запросов (например, get- или post-)
+"""
 class ProductsList(View):
     
     def get(self, request):
@@ -19,6 +27,7 @@ class ProductsList(View):
             'products': products,
         }
         return render(request, 'products.html', data)
+        """
 
 """ 
 class ProductsList(ListView):
