@@ -1,0 +1,15 @@
+>>> from simpleapp.models import *
+>>> Category.objects.create(name= 'Bathroom')
+<Category: Bathroom>
+>>> Category.objects.create(name= 'Kitchen')
+<Category: Kitchen>
+>>> Product.objects.create(name='Зубная щетка', description='хорошо чистит зубы', quantity=100, category=Category.objects.get(name='Bathroom'), price='55')
+<Product: Зубная Щетка: хорошо чистит зубы>
+>>> Product.objects.create(name='Губка', description='хорошо отмывает посуду', quantity=500, category=Category.objects.get(name='Kitchen'), price='20')
+<Product: Губка: хорошо отмывает посу>
+>>> p1=Product.objects.get(pk=1)
+>>> p2=Product.objects.get(pk=2)
+>>> print(p1)
+Зубная Щетка: хорошо чистит зубы
+>>> print(p2)
+Губка: хорошо отмывает посу
