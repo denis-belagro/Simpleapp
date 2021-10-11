@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.views import View # импортируем простую вьюшку
 from django.core.paginator import Paginator # импортируем класс, позволяющий удобно осуществлять постраничный вывод
 from .models import Product
+from django.views.generic import ListView, DetailView # импортируем класс, который говорит нам о том, что в этом представлении мы будем выводить список объектов из БД
+from datetime import datetime
 
 # В отличие от дженериков, которые мы уже знаем, код здесь надо писать самому, переопределяя типы запросов (например, get- или post-)
-class Products(View):
+class ProductsList(View):
     
     def get(self, request):
         products = Product.objects.order_by('-price')
@@ -16,16 +18,9 @@ class Products(View):
         data = {
             'products': products,
         }
-        return render(request, 'sample_app/product_list.html', data)
+        return render(request, 'products.html', data)
 
-
-
-"""
-from django.views.generic import ListView, DetailView # импортируем класс, который говорит нам о том, что в этом представлении мы будем выводить список объектов из БД
-from .models import Product, Category
-from datetime import datetime
-
- 
+""" 
 class ProductsList(ListView):
     model = Product  # указываем модель, объекты которой мы будем выводить
     template_name = 'products.html'  # указываем имя шаблона, в котором будет лежать HTML, в нём будут все инструкции о том, как именно пользователю должны вывестись наши объекты
@@ -38,10 +33,10 @@ class ProductsList(ListView):
         context['time_now'] = datetime.utcnow() # добавим переменную текущей даты time_now
         context['value1'] = None # добавим ещё одну пустую переменную, чтобы на её примере посмотреть работу другого фильтра
         return context
-
+"""
 # создаём представление, в котором будут детали конкретного отдельного товара
 class ProductDetail(DetailView):
     model = Product # модель всё та же, но мы хотим получать детали конкретно отдельного товара
     template_name = 'product.html' # название шаблона будет product.html
     context_object_name = 'product' # название объекта 
-"""
+
