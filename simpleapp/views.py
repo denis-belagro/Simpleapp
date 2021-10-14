@@ -11,13 +11,25 @@ class ProductsList(ListView):
     template_name = 'products.html'
     context_object_name = 'products'
     ordering = ['-price']
-    paginate_by = 1 # поставим постраничный вывод в один элемент
+    paginate_by = 3 # поставим постраничный вывод в один элемент
 
+    """  
     def get_context_data(self, **kwargs): # забираем отфильтрованные объекты переопределяя метод get_context_data у наследуемого класса (привет, полиморфизм, мы скучали!!!)
         context = super().get_context_data(**kwargs)
         context['filter'] = ProductFilter(self.request.GET, queryset=self.get_queryset()) # вписываем наш фильтр в контекст
         return context
-    
+    """
+
+    def get_filter(self):
+        return ProductFilter(self.request.GET, queryset=super().get_queryset())
+    def get_queryset(self):
+        return self.get_filter().qs
+    def get_context_data(self, *args, **kwargs):
+        return {
+            **super().get_context_data(*args, **kwargs),
+            "filter": self.get_filter(),
+        }
+        
 
 # В отличие от дженериков, которые мы уже знаем, код здесь надо писать самому, переопределяя типы запросов (например, get- или post-)
 """
