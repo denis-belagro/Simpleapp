@@ -16,7 +16,7 @@ Products
   -->
   <hr>
   
-{% if products  %}<!-- Выводим товары только если они есть с помощью тега if -->
+<!--{% if products  %} Выводим товары только если они есть с помощью тега if -->
   
 <!-- Перед таблицей добавим форму для поиска -->
 <form method="GET">
@@ -28,9 +28,9 @@ Products
         <td>
             Название
         </td>
-        <td>
+        <!--<td>
             Описание
-        </td>
+        </td>-->
         <td>
             Категория
         </td>
@@ -48,9 +48,9 @@ Products
             {{ product.name }} <!-- | multiply:3 - применим наш фильтр, чтобы название товара вывелось 4 раза -->
 
         </td>
-        <td>
+        <!--<td>
             {{ product.description|truncatechars:20 }}
-        </td>
+        </td>-->
         <td>
             {{ product.category.name }}
         </td>
@@ -68,8 +68,12 @@ Products
  
 <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->
 {% if page_obj.has_previous %}
-    <a href="?page=1">First</a>
-    <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+   <!-- <a href="?page=1">First</a>
+    <a href="?page={{ page_obj.previous_page_number }}"><<<</a>-->
+    <a href="?{{ request.get_full_path|update_page:1}}">First  </a>
+    <a href="?{{ request.get_full_path|update_page:page_obj.previous_page_number}}">  <<<  </a>
+
+
 {% endif %}
 
 <!-- Показываем только текущую страницу и ближайшие к ней, чтобы список не тянулся и не захламлял страницу -->
@@ -89,13 +93,34 @@ Products
 
 {% endif %}
   
+<form method="POST">
+    {% csrf_token %}
+    <!--
+    <label for="name">Name</label>
+    <input name="name" type="text">
+ 
+    <label for="price">Price</label>
+    <input name="price" min="0">
+
+    <label for="quantity">Quantity</label>
+    <input name="quantity" min="1">
+
+   <select name="category" size="4"> 
+    {% for category in categories %} 
+    <option value="{{ category.id }}"> {{ category.name }} </option> 
+    {% endfor %} 
+  </select>-->
+  {{ form }} <!-- Теперь нам нужна только готовая форма и кнопка -->
+   <input type="submit" value="Добавить товар"> 
+</form> 
+<!--
 
    
-{% else %}<!--   Если товаров нет, то говорим что товаров нет ;)--> 
+{% else %}
 
 
      <h2>Товаров нет!</h2>
 {% endif %}
-
+-->
 
 {% endblock content %}

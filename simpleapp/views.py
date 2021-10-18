@@ -1,10 +1,11 @@
 from django.shortcuts import render
 #from django.views import View # импортируем простую вьюшку
 from django.core.paginator import Paginator # импортируем класс, позволяющий удобно осуществлять постраничный вывод
-from .models import Product
+from .models import Product, Category
 from django.views.generic import ListView, DetailView # импортируем класс, который говорит нам о том, что в этом представлении мы будем выводить список объектов из БД
 #from datetime import datetime
 from .filters import ProductFilter # импортируем недавно написанный фильтр
+from .forms import ProductForm # импортируем нашу форму
 
 class ProductsList(ListView):
     model = Product
@@ -12,11 +13,14 @@ class ProductsList(ListView):
     context_object_name = 'products'
     ordering = ['-price']
     paginate_by = 3 # поставим постраничный вывод в один элемент
+    form_class = ProductForm # добавляем форм класс, чтобы получать доступ к форме через метод POST
 
-    """  
+
+    """ 
     def get_context_data(self, **kwargs): # забираем отфильтрованные объекты переопределяя метод get_context_data у наследуемого класса (привет, полиморфизм, мы скучали!!!)
         context = super().get_context_data(**kwargs)
         context['filter'] = ProductFilter(self.request.GET, queryset=self.get_queryset()) # вписываем наш фильтр в контекст
+        context['categories'] = Category.objects.all()
         return context
     """
 
@@ -28,7 +32,28 @@ class ProductsList(ListView):
         return {
             **super().get_context_data(*args, **kwargs),
             "filter": self.get_filter(),
+            "categories": Category.objects.all(),
+            "form": ProductForm(), 
         }
+
+
+    def post(self, request, *args, **kwargs):
+        # берём значения для нового товара из POST-запроса отправленного на сервер
+        """
+        name = request.POST['name']
+        quantity = request.POST['quantity']
+        category_id = request.POST['category']
+        price = request.POST['price']
+ 
+        product = Product(name=name, quantity=quantity, category_id=category_id, price=price) # создаём новый товар и сохраняем
+        product.save()
+        """
+        form = self.form_class(request.POST) # создаём новую форму, забиваем в неё данные из POST-запроса 
+ 
+        if form.is_valid(): # если пользователь ввёл всё правильно и нигде не накосячил, то сохраняем новый товар
+            form.save()
+
+        return super().get(request, *args, **kwargs) # отправляем пользователя обратно на GET-запрос.    
         
 
 # В отличие от дженериков, которые мы уже знаем, код здесь надо писать самому, переопределяя типы запросов (например, get- или post-)
