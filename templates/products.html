@@ -18,11 +18,11 @@ Products
   
 <!--{% if products  %} Выводим товары только если они есть с помощью тега if -->
   
-<!-- Перед таблицей добавим форму для поиска -->
+<!-- Перед таблицей добавим форму для поиска 
 <form method="GET">
-    {{ filter.form }} <!-- Форму от фильтров за нас сделает Django. А вот кнопку, увы, придётся делать самому -->
+    {{ filter.form }} 
     <input type="submit" value="Найти">
-</form>
+</form>-->
 <table>
     <tr>
         <td>
@@ -45,8 +45,12 @@ Products
    
     <tr>
         <td>
-            {{ product.name }} <!-- | multiply:3 - применим наш фильтр, чтобы название товара вывелось 4 раза -->
+            <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a><!-- | multiply:3 - применим наш фильтр, чтобы название товара вывелось 4 раза -->
+            <a href="{% url 'product_update' product.id %}"><u>Редактировать</u></a> <!-- добавим ссылку на редактирование товара-->
+ 
+            <a href="{% url 'product_delete' product.id %}"><u> Удалить </u></a> <!-- добавим ссылку на удаление товара-->
 
+            
         </td>
         <!--<td>
             {{ product.description|truncatechars:20 }}
@@ -63,6 +67,8 @@ Products
     </tr>
    {% endfor %}
   </table>
+  <a href="{% url 'product_create' %}">Добавить новый товар</a> <br>
+
   <!-- Проверяем что поддерживается постраничный вывод -->
 {% if is_paginated %}
  
@@ -92,10 +98,10 @@ Products
 {% endif %}
 
 {% endif %}
-  
+ <!-- 
 <form method="POST">
     {% csrf_token %}
-    <!--
+    
     <label for="name">Name</label>
     <input name="name" type="text">
  
@@ -110,9 +116,9 @@ Products
     <option value="{{ category.id }}"> {{ category.name }} </option> 
     {% endfor %} 
   </select>-->
-  {{ form }} <!-- Теперь нам нужна только готовая форма и кнопка -->
+ <!-- {{ form }}  Теперь нам нужна только готовая форма и кнопка 
    <input type="submit" value="Добавить товар"> 
-</form> 
+</form> -->
 <!--
 
    
