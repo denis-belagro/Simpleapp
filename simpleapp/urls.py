@@ -8,5 +8,7 @@ urlpatterns = [
     #path('<int:pk>', ProductDetail.as_view()),  # pk — это первичный ключ товара, который будет выводиться у нас в шаблон
      path('<int:pk>/', ProductDetailView.as_view(), name='product_detail'), # Ссылка на детали товара
     path('create/', ProductCreateView.as_view(), name='product_create'), # Ссылка на создание товара
+    path('update/<int:pk>', ProductUpdateView.as_view(), name='product_update'),
+    path('delete/<int:pk>', ProductDeleteView.as_view(), name='product_delete')
 
 ]
